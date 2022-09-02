@@ -47,7 +47,25 @@ public class App
      * Если общего префикса нет, то возвращать пустую строку. Пример ["aabb", "aabbb", "aaabb"] - ответ "aa"
      */
     private static void task2(){
-
+        String[] inputStrings = {"aaaabb", "aaaaaaaaabbb", "aaabb"};
+        char prefixSymbol = inputStrings[0].charAt(0);
+        int minCount = Integer.MAX_VALUE;
+        for(String inpuString: inputStrings){
+            int curCount = 0;
+            for(int i = 0; i < inpuString.length(); i++){
+                if(inpuString.charAt(i) != prefixSymbol){
+                    break;
+                }
+                curCount++;
+            }
+            if(curCount == 0){
+                minCount = 0;
+                break;
+            } else if(minCount > curCount){
+                minCount = curCount;
+            }
+        }
+        System.out.printf("Result = %s\n", inputStrings[0].subSequence(0, minCount));
     }
 
      
