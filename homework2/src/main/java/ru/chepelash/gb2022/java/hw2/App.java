@@ -2,6 +2,7 @@ package ru.chepelash.gb2022.java.hw2;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -9,9 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +20,7 @@ import javax.naming.directory.InvalidAttributesException;
 
 public class App 
 {
+    private final static Logger LOGGER = Logger.getLogger(App.class.getName());
     /*
      * 1. Напишите метод, который определит тип (расширение) файлов из текущей папки и выведет в консоль результат вида
      *  1 Расширение файла: txt
@@ -27,8 +29,10 @@ public class App
      *  4 Расширение файла: jpg
      */
     public static List<String> task1(String strDirPath) throws InvalidAttributesException, IOException{
+        LOGGER.info("Starting task1");
         Path dirPath = Paths.get(strDirPath);
         if(!Files.isDirectory(dirPath)){
+            LOGGER.info(String.format("Wrong input parameter: %s", strDirPath));
             throw new InvalidAttributesException("Path is not directory");
         }
         AtomicInteger indx = new AtomicInteger(1);
@@ -37,7 +41,11 @@ public class App
             result = pathStream.map(e -> String.format("%d Расширение файла: %s", indx.getAndIncrement(),
                     FilenameUtils.getExtension(e.getFileName().toString())))
                     .collect(Collectors.toList());
+        } catch (IOException e){
+            LOGGER.info("Error during reading list of directories");
+            throw new IOException("Error during reading list of directories", e);
         }
+        LOGGER.info(String.format("Finishing task1. Result = %s", result));
         return result;
     }
     
@@ -50,6 +58,7 @@ public class App
      *  Ответ: "select * from students where name = 'Ivanov' and country = 'Russia' and city = 'Moscow'" для приведенного примера
      */
     public static String task2(String jsonString){
+        LOGGER.info("Starting task2");
         JSONObject jsonObject = new JSONObject(jsonString);
         StringBuilder sb = new StringBuilder();
         sb.append("select * from students where ");
@@ -62,6 +71,7 @@ public class App
         if(sb.lastIndexOf(" and ") != -1) {
             sb.delete(sb.lastIndexOf(" and "), sb.length());
         }
+        LOGGER.info("Finishing task2");
         return sb.toString();
     }
     
@@ -80,12 +90,24 @@ public class App
      *
      */
     public static List<String> task3(String fpath) throws IOException {
+        LOGGER.info("Starting task3");
         Path jsonFile = Paths.get(fpath);
-        if(!Files.isRegularFile(jsonFile)){
-            throw new IllegalArgumentException();
+        try {
+            if (!Files.isRegularFile(jsonFile)) {
+                LOGGER.info(String.format("Wrong input parameter: %s", fpath));
+                throw new IllegalArgumentException("Wrong input parameter");
+            }
+        } catch (SecurityException e) {
+            LOGGER.info("Security exception");
+            throw new SecurityException(e);
         }
-
-        JSONArray jsonArray = new JSONArray(Files.readString(jsonFile));
+        JSONArray jsonArray;
+        try {
+            jsonArray = new JSONArray(Files.readString(jsonFile));
+        } catch (JSONException e) {
+            LOGGER.info(String.format("Error during file parsing: %s", e.toString()));
+            throw new JSONException(e);
+        }
 
         List<String> result = new ArrayList<>();
         for(Object jsonItem : jsonArray) {
@@ -106,6 +128,7 @@ public class App
             sb.append(".");
             result.add(sb.toString());
         }
+        LOGGER.info("Finishing task3");
         return result;
     }    
 }
