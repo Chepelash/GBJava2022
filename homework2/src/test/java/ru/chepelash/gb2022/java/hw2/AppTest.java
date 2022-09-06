@@ -4,17 +4,29 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import javax.naming.directory.InvalidAttributesException;
+import java.io.IOException;
+
 /**
  * Unit test for simple App.
  */
 public class AppTest 
 {
-    /**
-     * Rigorous Test :-)
-     */
+
     @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    public void testTask1() throws InvalidAttributesException, IOException {
+        String dirPath = "/home/virtboy/Documents";
+        for(String extension : App.task1(dirPath)){
+            System.out.println(extension);
+        }
     }
+
+    @Test
+    public void testTask2() {
+    }
+
+    @Test
+    public void testTask3() {
+    }
+
 }
