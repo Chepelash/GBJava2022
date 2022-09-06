@@ -27,7 +27,8 @@ public class AppTest
     }
 
     @Test
-    public void testTask3() {
+    public void testTask3() throws IOException {
+        System.out.println(App.task3("src/test/resources/task3Data"));
     }
 
 }

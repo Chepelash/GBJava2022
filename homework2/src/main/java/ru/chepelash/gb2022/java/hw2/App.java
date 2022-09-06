@@ -1,12 +1,15 @@
 package ru.chepelash.gb2022.java.hw2;
 
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -76,9 +79,33 @@ public class App
      *   Студент Краснов получил 5 по предмету Физика.
      *
      */
-    public String task3(String fpath){
-        String result = null;
+    public static List<String> task3(String fpath) throws IOException {
+        Path jsonFile = Paths.get(fpath);
+        if(!Files.isRegularFile(jsonFile)){
+            throw new IllegalArgumentException();
+        }
 
+        JSONArray jsonArray = new JSONArray(Files.readString(jsonFile));
+
+        List<String> result = new ArrayList<>();
+        for(Object jsonItem : jsonArray) {
+            StringBuilder sb = new StringBuilder();
+            JSONObject jsonObject = (JSONObject) jsonItem;
+            sb.append("Студент ");
+            if(jsonObject.has("фамилия")){
+                sb.append(jsonObject.getString("фамилия"));
+            }
+            sb.append(" получил ");
+            if(jsonObject.has("оценка")){
+                sb.append(jsonObject.getString("оценка"));
+            }
+            sb.append(" по предмету ");
+            if(jsonObject.has("предмет")){
+                sb.append(jsonObject.getString("предмет"));
+            }
+            sb.append(".");
+            result.add(sb.toString());
+        }
         return result;
     }    
 }
