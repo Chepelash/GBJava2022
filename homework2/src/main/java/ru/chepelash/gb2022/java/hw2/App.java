@@ -28,11 +28,12 @@ public class App
             throw new InvalidAttributesException("Path is not directory");
         }
         AtomicInteger indx = new AtomicInteger(1);
-        List<String> result = Files.list(dirPath)
-                .map(e -> String.format("%d Расширение файла: %s", indx.getAndIncrement(),
-                        FilenameUtils.getExtension(e.getFileName().toString())))
-                .collect(Collectors.toList());
-
+        List<String> result;
+        try(Stream<Path> pathStream = Files.list(dirPath)) {
+            result = pathStream.map(e -> String.format("%d Расширение файла: %s", indx.getAndIncrement(),
+                    FilenameUtils.getExtension(e.getFileName().toString())))
+                    .collect(Collectors.toList());
+        }
         return result;
     }
     
