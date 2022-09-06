@@ -23,6 +23,7 @@ public class AppTest
 
     @Test
     public void testTask2() {
+        System.out.println(App.task2("{'name':'Ivanov', 'country':'Russia', 'city':'Moscow', 'age':'null'}"));
     }
 
     @Test

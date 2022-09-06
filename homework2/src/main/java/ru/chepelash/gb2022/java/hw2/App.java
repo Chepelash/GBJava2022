@@ -1,6 +1,7 @@
 package ru.chepelash.gb2022.java.hw2;
 
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -45,10 +46,20 @@ public class App
      * Параметры для фильтрации: {"name":"Ivanov", "country":"Russia", "city":"Moscow", "age":"null"}
      *  Ответ: "select * from students where name = 'Ivanov' and country = 'Russia' and city = 'Moscow'" для приведенного примера
      */
-    public String task2(String fpath){
-        String result = null;
-
-        return result;
+    public static String task2(String jsonString){
+        JSONObject jsonObject = new JSONObject(jsonString);
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from students where ");
+        String[] parameters = {"name", "country", "city", "age"};
+        for(String parameter : parameters) {
+            if(jsonObject.has(parameter) && !jsonObject.getString(parameter).equals("null")){
+                sb.append("'").append(parameter).append("' = '").append(jsonObject.getString(parameter)).append("'").append(" and ");
+            }
+        }
+        if(sb.lastIndexOf(" and ") != -1) {
+            sb.delete(sb.lastIndexOf(" and "), sb.length());
+        }
+        return sb.toString();
     }
     
     /*
