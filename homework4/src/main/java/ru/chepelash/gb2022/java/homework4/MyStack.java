@@ -3,6 +3,11 @@ package ru.chepelash.gb2022.java.homework4;
 
 import java.util.EmptyStackException;
 
+/*
+ * Взять за основу реализацию стека, написанную в конце семенара. Добавить проверку граничных условий
+ * и выводить сообщения об ошибках, если мы пытаемся извлечь элемент из пустого стека,
+ * добавить элемент в полностью заполненный стек и тд
+ */
 public class MyStack <T>
 {
     private final int maxLength;
@@ -10,6 +15,8 @@ public class MyStack <T>
     private T[] array;
 
     public MyStack(int maxLength){
+        if(maxLength < 1)
+            throw new IllegalArgumentException();
         this.maxLength = maxLength;
         index = 0;
         array = (T[]) new Object[maxLength];
