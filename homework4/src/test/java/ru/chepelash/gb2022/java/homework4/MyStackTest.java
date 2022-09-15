@@ -57,4 +57,9 @@ class MyStackTest {
     void popError() {
         assertThrows(EmptyStackException.class, () -> myStack.pop());
     }
+
+    @org.junit.jupiter.api.Test
+    void maxLengthError() {
+        assertThrows(IllegalArgumentException.class, () -> {MyStack<Integer> errorStack = new MyStack<>(-1);});
+    }
 }
