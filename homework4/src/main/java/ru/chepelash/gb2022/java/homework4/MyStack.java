@@ -39,4 +39,8 @@ public class MyStack <T>
         array[index] = value;
         index++;
     }
+
+    public int getMaxLength() {
+        return maxLength;
+    }
 }
