@@ -16,11 +16,21 @@ public class NotebookCollection {
         return notebooks;
     }
 
-    public void addNotebook(Map<String, NotebookDTO> notebook){
-        notebooks.putAll(notebook);
+    public void addNotebook(String serialCode, NotebookDTO notebook)
+            throws IllegalArgumentException{
+        if(notebooks.containsKey(serialCode)){
+            throw new IllegalArgumentException("This serial code exists");
+        }
+        notebooks.put(serialCode, notebook);
     }
-    public NotebookDTO removeNotebook(String serialCode){
-        return notebooks.remove(serialCode);
+    public void removeNotebook(String serialCode) throws IllegalArgumentException {
+        if(notebooks.isEmpty()){
+            throw new IllegalArgumentException("Notebook collection is empty");
+        }
+        if(!notebooks.containsKey(serialCode)){
+            throw new IllegalArgumentException("There is no such serial code");
+        }
+        notebooks.remove(serialCode);
     }
     public boolean isEmpty(){
         return notebooks.isEmpty();
