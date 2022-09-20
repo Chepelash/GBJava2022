@@ -29,13 +29,16 @@ public class NotebookService {
                     ozu, hddSize, screenSize));
         }
         NotebookDTO notebookDTO = new NotebookDTO(vendor, model, ozu, hddSize, os, color, screenSize);
-        notebookCollection.addNotebook(Map.of(serialCode, notebookDTO));
+        notebookCollection.addNotebook(serialCode, notebookDTO);
     }
-    public boolean removeNotebookBySerialCode(String serialCode) throws IllegalArgumentException{
+    public void removeNotebookBySerialCode(String serialCode) throws IllegalArgumentException{
         if(serialCode == null || serialCode.isEmpty()){
             throw new IllegalArgumentException("serialCode is empty");
         }
-        return notebookCollection.removeNotebook(serialCode) != null;
+        notebookCollection.removeNotebook(serialCode);
+    }
+    public HashMap<String, NotebookDTO> getAllNotebooks(){
+        return notebookCollection.getNotebooks();
     }
     public HashMap<String, NotebookDTO> getNotebooksByColors(List<ColorEnum> colors){
         if(notebookCollection.isEmpty()){
@@ -55,12 +58,48 @@ public class NotebookService {
         return result;
     }
 
+    public HashMap<String, NotebookDTO> getNotebooksByOs(List<OsEnum> osEnums){
+        if(notebookCollection.isEmpty()){
+            return null;
+        }
+        List<Map.Entry<String, NotebookDTO>> filteredEntries = notebookCollection.getNotebooks().entrySet().stream()
+                .filter(e -> osEnums.contains(e.getValue().getOs()))
+                .collect(Collectors.toList());
+        if(filteredEntries.isEmpty()){
+            return null;
+        }
+        HashMap<String, NotebookDTO> result = new HashMap<>();
+        for (Map.Entry<String, NotebookDTO> entry:
+                filteredEntries) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
     public HashMap<String, NotebookDTO> getNotebooksByOzu(int ozu){
         if(ozu < 0){
             return null;
         }
         List<Map.Entry<String, NotebookDTO>> filteredEntries = notebookCollection.getNotebooks().entrySet().stream()
                 .filter(e -> e.getValue().getOzu() >= ozu)
+                .collect(Collectors.toList());
+        if(filteredEntries.isEmpty()){
+            return null;
+        }
+        HashMap<String, NotebookDTO> result = new HashMap<>();
+        for (Map.Entry<String, NotebookDTO> entry:
+                filteredEntries) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
+    public HashMap<String, NotebookDTO> getNotebooksByHdd(int hdd){
+        if(hdd < 0){
+            return null;
+        }
+        List<Map.Entry<String, NotebookDTO>> filteredEntries = notebookCollection.getNotebooks().entrySet().stream()
+                .filter(e -> e.getValue().getHddSize() >= hdd)
                 .collect(Collectors.toList());
         if(filteredEntries.isEmpty()){
             return null;
