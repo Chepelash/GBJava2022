@@ -41,7 +41,7 @@ class NotebookServiceTest {
     void getNotebooksByColors() {
         notebookService.addNotebook("1", VendorEnum.HP, "model1",
                 1024, 1024, OsEnum.NO_OS, ColorEnum.BLACK, 24.4);
-        assertNull(notebookService.getNotebooksByColors(List.of(ColorEnum.RED)));
+        assertEquals(new HashMap<String, NotebookDTO>(), notebookService.getNotebooksByColors(List.of(ColorEnum.RED)));
         HashMap<String, NotebookDTO> expected = new HashMap<>(Map.of("1",
                 new NotebookDTO(VendorEnum.HP, "model1",
                         1024, 1024, OsEnum.NO_OS, ColorEnum.BLACK, 24.4)));
