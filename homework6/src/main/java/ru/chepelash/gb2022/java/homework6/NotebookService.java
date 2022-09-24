@@ -104,11 +104,18 @@ public class NotebookService {
         return collectHashMap(filteredEntries);
     }
 
-    public HashMap<String, NotebookDTO> getNotebooksByOzu(int ozu){
+    public HashMap<String, NotebookDTO> getNotebooksByOzuMoreThan(int ozu){
         return getNotebookByParameter(ozu, "ozu");
     }
 
-    public HashMap<String, NotebookDTO> getNotebooksByHdd(int hdd){
+    public HashMap<String, NotebookDTO> getNotebooksByHddMoreThan(int hdd){
         return getNotebookByParameter(hdd, "hdd");
+    }
+    public HashMap<String, NotebookDTO> getNotebooksByOzuLessThan(int ozu){
+        return getNotebookByParameter(ozu, "ozu", false);
+    }
+
+    public HashMap<String, NotebookDTO> getNotebooksByHddLessThan(int hdd){
+        return getNotebookByParameter(hdd, "hdd", false);
     }
 }
