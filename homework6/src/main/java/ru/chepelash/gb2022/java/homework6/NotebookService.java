@@ -40,7 +40,7 @@ public class NotebookService {
     public HashMap<String, NotebookDTO> getAllNotebooks(){
         return notebookCollection.getNotebooks();
     }
-    private HashMap<String, NotebookDTO> getNotebookByParameter(int parameterValue, String parameterName) {
+    private HashMap<String, NotebookDTO> getNotebookByParameter(int parameterValue, String parameterName, boolean betterThan){
         HashMap<String, NotebookDTO> result = new HashMap<>();
         if(parameterValue < 0){
             return result;
@@ -48,14 +48,24 @@ public class NotebookService {
         List<Map.Entry<String, NotebookDTO>> filteredEntries;
         switch (parameterName){
             case "hdd":
-                filteredEntries = notebookCollection.getNotebooks().entrySet().stream()
-                        .filter(e -> e.getValue().getHddSize() >= parameterValue)
-                        .collect(Collectors.toList());
+                if(betterThan)
+                    filteredEntries = notebookCollection.getNotebooks().entrySet().stream()
+                            .filter(e -> e.getValue().getHddSize() >= parameterValue)
+                            .collect(Collectors.toList());
+                else
+                    filteredEntries = notebookCollection.getNotebooks().entrySet().stream()
+                            .filter(e -> e.getValue().getHddSize() <= parameterValue)
+                            .collect(Collectors.toList());
                 break;
             case "ozu":
-                filteredEntries = notebookCollection.getNotebooks().entrySet().stream()
-                        .filter(e -> e.getValue().getOzu() >= parameterValue)
-                        .collect(Collectors.toList());
+                if(betterThan)
+                    filteredEntries = notebookCollection.getNotebooks().entrySet().stream()
+                            .filter(e -> e.getValue().getOzu() >= parameterValue)
+                            .collect(Collectors.toList());
+                else
+                    filteredEntries = notebookCollection.getNotebooks().entrySet().stream()
+                            .filter(e -> e.getValue().getOzu() <= parameterValue)
+                            .collect(Collectors.toList());
                 break;
             default:
                 throw new IllegalArgumentException("Wrong parameter");
@@ -65,6 +75,9 @@ public class NotebookService {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
+    }
+    private HashMap<String, NotebookDTO> getNotebookByParameter(int parameterValue, String parameterName) {
+        return getNotebookByParameter(parameterValue, parameterName, true);
     }
     private HashMap<String, NotebookDTO> collectHashMap(List<Map.Entry<String, NotebookDTO>> filteredEntries){
         HashMap<String, NotebookDTO> result = new HashMap<>();
